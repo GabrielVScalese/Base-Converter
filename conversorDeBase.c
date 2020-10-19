@@ -43,6 +43,7 @@ void inserirNoInicio (struct list *lista, int valor)
 char* getCharArray (struct list *lista)
 {
     char *charArray = malloc (lista->tamanho * sizeof(char));
+    strcpy(charArray, " ");
     struct no *aux = lista->primeiro;
     int cont = 0;
     while (aux != NULL)
