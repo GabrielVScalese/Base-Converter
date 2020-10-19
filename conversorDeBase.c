@@ -46,6 +46,7 @@ char* getCharArray (struct list *lista)
     strcpy(charArray, " ");
     struct no *aux = lista->primeiro;
     int cont = 0;
+
     while (aux != NULL)
     {
         char valorChar [1];
@@ -75,7 +76,7 @@ char* converterParaBase (int valor, int baseConversao)
     return getCharArray(lista);
 }
 
-int converterParaDez (char valor [], int baseValor)
+double converterParaDez (char valor [], int baseValor)
 {
     double result;
     int i = strlen(valor) - 1;
@@ -92,47 +93,62 @@ int converterParaDez (char valor [], int baseValor)
     return result;
 }
 
-char* converter (char *valor, int baseValor, int baseConversao)
+char* converter (char *valor, int baseValor, int baseConversao, char *result)
 {
-    char *result = malloc (4);
-    int auxResult;
+    result = malloc (4);
+    strcpy(result, " ");
+    double auxResult;
     auxResult = converterParaDez(valor, baseValor);
-    if (baseConversao != 10)
-        result = converterParaBase(auxResult, baseConversao);
-    else
-        sprintf(result, "%i", auxResult);
+    result = converterParaBase(auxResult, baseConversao);
 
     return result;
 }
 
 int main ()
 {
-    char valor [1000];
-    int baseValor;
-    int baseConversao;
-    printf ("Conversor de bases numericas\n");
+    int continuar = 1;
+    while (continuar != 0)
+    {
+        system("cls");
+        char *res = malloc(1);
+        char valor [1000];
+        int baseValor;
+        int baseConversao;
+        printf ("Conversor de bases numericas\n");
 
-    printf ("\nDigite o valor a ser convertido:\n");
-    fflush(stdout);
+        printf ("\nDigite o valor a ser convertido:\n");
+        fflush(stdout);
 
-    scanf("%s", valor);
-    fflush(stdin);
+        scanf("%s", valor);
+        fflush(stdin);
 
-    printf ("\nDigite a base do valor:\n");
-    fflush(stdout);
+        printf ("\nDigite a base do valor:\n");
+        fflush(stdout);
 
-    scanf("%i", &baseValor);
-    fflush(stdin);
+        scanf("%i", &baseValor);
+        fflush(stdin);
 
-    printf ("\nDigite a base para a conversao:\n");
-    fflush(stdout);
+        printf ("\nDigite a base para a conversao:\n");
+        fflush(stdout);
 
-    scanf("%i", &baseConversao);
-    fflush(stdin);
+        scanf("%i", &baseConversao);
+        fflush(stdin);
 
-    char* result = converter(valor, baseValor, baseConversao);
+        char* result = converter(valor, baseValor, baseConversao, result);
 
-    printf("\nR: Valor da conversao = %s", result);
+        printf("\nR: Valor da conversao = %s", result);
+
+        printf("\n\nDeseja encerrar o programa? Se sim, digite s, senao, digite n\n");
+        fflush(stdout);
+        scanf ("%s", res);
+        fflush (stdin);
+
+        if (strcmp(res, "s") == 0)
+            continuar = 0;
+
+        free(res);
+        free(result);
+    }
 
     return 0;
 }
