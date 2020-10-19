@@ -138,12 +138,12 @@ int main ()
 
         printf("\nR: Valor da conversao = %s", result);
 
-        printf("\n\nDeseja encerrar o programa? Se sim, digite s, senao, digite n\n");
+        printf("\n\nDeseja encerrar o programa? Se sim, digite sim, senao, digite nao: ");
         fflush(stdout);
         scanf ("%s", res);
         fflush (stdin);
 
-        if (strcmp(res, "s") == 0)
+        if (strcmp(res, "sim") == 0)
             continuar = 0;
 
         free(res);
