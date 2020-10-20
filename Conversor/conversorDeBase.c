@@ -82,37 +82,17 @@ char* getCharArray (struct lista *lista)
 
 void removaChar (char *string, char carac)
 {
-    int i = 0;
-    int j = 0;
+    int i = 0, j = 0;
 
     while (string[i])
     {
         if (string[i] != carac)
-        {
             string[j++] = string[i];
-        }
 
         i++;
     }
 
     string[j] = '\0';
-}
-
-char* converterParaBase (double valor, unsigned int baseConversao)
-{
-    int quociente = valor;
-    int result;
-    struct list *lista = malloc(4);
-    inicializarLista(lista);
-
-    while (quociente != 0)
-    {
-        int resto = quociente % baseConversao;
-        inserirNoInicio(lista, resto);
-        quociente = (int) quociente / baseConversao;
-    }
-
-    return getCharArray(lista);
 }
 
 double converterParaDez (char valor [], unsigned int baseValor)
@@ -134,11 +114,10 @@ double converterParaDez (char valor [], unsigned int baseValor)
 
 char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 {
-    int parteInteira = (int) valor;
-    double parteDecimal = valor - parteInteira;
-
-    int quociente = parteInteira;
+    int quociente = (int) valor; // Obtem a parte inteira do valor
+    double parteDecimal = valor - quociente;
     int aux = 0;
+
     struct list *listaResto = malloc(4);
     inicializarLista(listaResto);
     struct list *listaDecimal = malloc(4);
@@ -154,12 +133,15 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
         quociente = (int) quociente / baseConversao;
     }
 
-    while (aux < 1)
-    {
-        aux = parteDecimal * baseConversao;
-        inserirNoFim(listaDecimal, aux);
-        parteDecimal = parteDecimal - aux;
-    }
+    if (parteDecimal != 0)
+        while (aux < 1)
+        {
+            aux = parteDecimal * baseConversao;
+            inserirNoFim(listaDecimal, aux);
+            parteDecimal = parteDecimal - aux;
+        }
+    else
+        inserirNoFim(listaDecimal, 0);
 
     char *parteInteiraChar = getCharArray(listaResto);
     char *parteDecimalChar = getCharArray(listaDecimal);
@@ -173,18 +155,19 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 double converterParaDezFrac (char valor[], unsigned int baseValor)
 {
     char delim [] = ",";
-    char *split = strtok(valor, delim);
+    char *split = strtok(valor, delim); // Obtem parte inteira do valor
     char aux [10];
     strcpy(aux, split);
     double parteInteira = converterParaDez(aux, baseValor);
 
-    split = strtok(NULL, delim);
+    split = strtok(NULL, delim); // Obtem parte decimal do valor
 
     double parteFrac = 0;
     char numerosDecimais [100];
     strcpy(numerosDecimais, split);
     int i = 0;
     int cont = -1;
+
     for (; i <= strlen(numerosDecimais) - 1; i++)
     {
         int digito = numerosDecimais[i] - '0';
@@ -198,30 +181,23 @@ double converterParaDezFrac (char valor[], unsigned int baseValor)
 
 char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao, char *result)
 {
-    if (strchr(valor, ','))
-    {
-        result = malloc (4);
-        double valorNaDez = converterParaDezFrac(valor, baseValor);
-        result = converterParaBaseFrac(valorNaDez, baseConversao);
-        return result;
-    }
+    result = malloc (4);
+
+    if (strchr(valor, ',') == NULL)
+        strcat(valor, ",0");
+
     if (strchr(valor, '-') != NULL)
     {
         removaChar(valor, '-');
-        result = malloc (4);
         strcpy(result, "-");
-        double valorNaDez = converterParaDez(valor, baseValor);
-        char *auxResult = malloc (4);
-        strcpy(auxResult, "");
-        auxResult = converterParaBase(valorNaDez, baseConversao);
+        double valorNaDez = converterParaDezFrac(valor, baseValor);
+        char *auxResult = converterParaBaseFrac (valorNaDez, baseConversao);
         strcat(result, auxResult);
     }
     else
     {
-        result = malloc (4);
-        strcpy(result, " ");
-        double valorNaDez = converterParaDez(valor, baseValor);
-        result = converterParaBase(valorNaDez, baseConversao);
+        double valorNaDez = converterParaDezFrac(valor, baseValor);
+        result = converterParaBaseFrac (valorNaDez, baseConversao);
     }
 
     return result;
@@ -229,14 +205,14 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
 
 int main ()
 {
-    int continuar = 1;
+    unsigned int continuar = 1;
     while (continuar != 0)
     {
         system("cls");
         char *res = malloc(1);
         char valor [1000];
-        unsigned int baseValor;
-        unsigned int baseConversao;
+        char valorClone [1000];
+        unsigned int baseValor, baseConversao;
         printf ("Conversor de bases numericas\n");
 
         printf ("\nDigite o valor a ser convertido:\n");
@@ -244,8 +220,9 @@ int main ()
 
         scanf("%s", valor);
         fflush(stdin);
+        strcpy(valorClone, valor);
 
-        printf ("\nDigite a base do valor:\n");
+        printf ("\nDigite a base do valor a ser convertido:\n");
         fflush(stdout);
 
         scanf("%u", &baseValor);
@@ -259,18 +236,25 @@ int main ()
 
         char* result = converter(valor, baseValor, baseConversao, result);
 
-        printf("\nR: Valor da conversao = %s", result);
+        printf("\nR: %s (base %i) ~= %s (base %i)", valorClone, baseValor, result, baseConversao);
 
-        printf("\n\nDeseja encerrar o programa? Se sim, digite sim, senao, digite nao: ");
+        resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
         fflush(stdout);
         scanf ("%s", res);
         fflush (stdin);
 
         if (strcmp(res, "sim") == 0)
             continuar = 0;
+        else
+            if (strcmp(res, "nao") != 0)
+            {
+                printf("\nVoce deve digitar sim ou nao!");
+                fflush(stdout);
+                goto resposta;
+            }
 
-        free(res);
-        free(result);
+        /*free(res);
+        free(result);*/
     }
 
     return 0;
