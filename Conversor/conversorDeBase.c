@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 struct no {
     int valor;
@@ -95,6 +96,168 @@ void removaChar (char *string, char carac)
     string[j] = '\0';
 }
 
+char* getLetra (int valor)
+{
+    if (valor == 10)
+        return 'A';
+
+    if (valor == 11)
+        return 'B';
+
+    if (valor == 12)
+        return 'C';
+
+    if (valor == 13)
+        return 'D';
+
+    if (valor == 14)
+        return 'E';
+
+    if (valor == 15)
+        return 'F';
+
+    if (valor == 16)
+        return 'G';
+
+    if (valor == 17)
+        return 'H';
+
+    if (valor == 18)
+        return 'I';
+
+    if (valor == 19)
+        return 'J';
+
+    if (valor == 20)
+        return 'K';
+
+    if (valor == 21)
+        return 'L';
+
+    if (valor == 22)
+        return 'M';
+
+    if (valor == 23)
+        return 'N';
+
+    if (valor == 24)
+        return 'O';
+
+    if (valor == 25)
+        return 'P';
+
+    if (valor == 26)
+        return 'Q';
+
+    if (valor == 27)
+        return 'R';
+
+    if (valor == 28)
+        return 'S';
+
+    if (valor == 29)
+        return 'T';
+
+    if (valor == 30)
+        return 'U';
+
+    if (valor == 31)
+        return 'V';
+
+    if (valor == 32)
+        return 'W';
+
+    if (valor == 33)
+        return 'X';
+
+    if (valor == 34)
+        return 'Y';
+
+    if (valor == 35)
+        return 'Z';
+}
+
+int getValor (char *letra)
+{
+    if (toupper(letra) == 'A')
+        return 10;
+
+    if (toupper(letra) == 'B')
+        return 11;
+
+    if (toupper(letra) == 'C')
+        return 12;
+
+    if (toupper(letra) == 'D')
+        return 13;
+
+    if (toupper(letra) == 'E')
+        return 14;
+
+    if (toupper(letra) == 'F')
+        return 15;
+
+    if (toupper(letra) == 'G')
+        return 16;
+
+    if (toupper(letra) == 'H')
+        return 17;
+
+    if (toupper(letra) == 'I')
+        return 18;
+
+    if (toupper(letra) == 'J')
+        return 19;
+
+    if (toupper(letra) == 'K')
+        return 20;
+
+    if (toupper(letra) == 'L')
+        return 21;
+
+    if (toupper(letra) == 'M')
+        return 22;
+
+    if (toupper(letra) == 'N')
+        return 23;
+
+    if (toupper(letra) == 'O')
+        return 24;
+
+    if (toupper(letra) == 'P')
+        return 25;
+
+    if (toupper(letra) == 'Q')
+        return 26;
+
+    if (toupper(letra) == 'R')
+        return 27;
+
+    if (toupper(letra) == 'S')
+        return 28;
+
+    if (toupper(letra) == 'T')
+        return 29;
+
+    if (toupper(letra) == 'U')
+        return 30;
+
+    if (toupper(letra) == 'V')
+        return 31;
+
+    if (toupper(letra) == 'W')
+        return 32;
+
+    if (toupper(letra) == 'X')
+        return 33;
+
+    if (toupper(letra) == 'Y')
+        return 34;
+
+    if (toupper(letra) == 'Z')
+        return 35;
+}
+
 double converterParaDez (char valor [], unsigned int baseValor)
 {
     double result = 0;
@@ -103,20 +266,37 @@ double converterParaDez (char valor [], unsigned int baseValor)
 
     for (; i >= 0 ; i--)
     {
-        int digito = valor[i] - '0';
-        double potencia = pow (baseValor, cont);
-        result += digito * potencia;
-        cont++;
+        if (isalpha(valor[i]))
+        {
+            int digito = getValor(valor[i]);
+            double potencia = pow (baseValor, cont);
+            result += digito * potencia;
+            cont++;
+        }
+        else
+        {
+            int digito = valor[i] - '0';
+            double potencia = pow (baseValor, cont);
+            result += digito * potencia;
+            cont++;
+        }
     }
 
     return result;
 }
 
+int isInteger(double val)
+{
+    int truncated = (int)val;
+    return (val == truncated);
+}
+
 char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 {
-    int quociente = (int) valor; // Obtem a parte inteira do valor
+    unsigned int quociente = (unsigned int) valor; // Obtem a parte inteira do valor
     double parteDecimal = valor - quociente;
-    int aux = 0;
+    unsigned int aux = 0;
+    unsigned int numeroCasas = 0;
 
     struct list *listaResto = malloc(4);
     inicializarLista(listaResto);
@@ -134,11 +314,21 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     }
 
     if (parteDecimal != 0)
-        while (aux < 1)
+        while (numeroCasas < 11)
         {
+            double produto;
+            produto = parteDecimal * baseConversao;
             aux = parteDecimal * baseConversao;
+            parteDecimal = produto;
             inserirNoFim(listaDecimal, aux);
-            parteDecimal = parteDecimal - aux;
+
+            if (isInteger(parteDecimal))
+                break;
+
+            if (aux >= 1)
+                parteDecimal = parteDecimal - aux;
+
+            numeroCasas++;
         }
     else
         inserirNoFim(listaDecimal, 0);
@@ -170,10 +360,20 @@ double converterParaDezFrac (char valor[], unsigned int baseValor)
 
     for (; i <= strlen(numerosDecimais) - 1; i++)
     {
-        int digito = numerosDecimais[i] - '0';
-        double potencia = pow (baseValor, cont);
-        parteFrac += digito * potencia;
-        cont--;
+        if (isalpha(numerosDecimais[i]))
+        {
+            int digito = getValor (numerosDecimais[i]);
+            double potencia = pow (baseValor, cont);
+            parteFrac += digito * potencia;
+            cont--;
+        }
+        else
+        {
+            int digito = numerosDecimais[i] - '0';
+            double potencia = pow (baseValor, cont);
+            parteFrac += digito * potencia;
+            cont--;
+        }
     }
 
     return parteInteira + parteFrac;
@@ -206,8 +406,8 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
 int main ()
 {
     unsigned int continuar = 1;
-    while (continuar != 0)
-    {
+    //while (continuar != 0)
+    //{
         system("cls");
         char *res = malloc(1);
         char valor [1000];
@@ -236,9 +436,9 @@ int main ()
 
         char* result = converter(valor, baseValor, baseConversao, result);
 
-        printf("\nR: %s (base %i) ~= %s (base %i)", valorClone, baseValor, result, baseConversao);
+        printf("\nR: %s (base %i) ~= %s (base %i)\n", valorClone, baseValor, result, baseConversao);
 
-        resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
+        /*resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
         fflush(stdout);
         scanf ("%s", res);
         fflush (stdin);
@@ -253,9 +453,9 @@ int main ()
                 goto resposta;
             }
 
-        /*free(res);
-        free(result);*/
-    }
+        free(res);
+        free(result);
+    }*/
 
     return 0;
 }

@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1603229462 source:f:\cotuca\2020\ensino tecnico\segundo semestre\topicos em programacao orientada a objetos\projetos\projeto i\base-converter\conversor\conversordebase.c
+1603294194 source:f:\cotuca\2020\ensino tecnico\segundo semestre\topicos em programacao orientada a objetos\projetos\projeto i\base-converter\conversor\conversordebase.c
 	<stdio.h>
 	<math.h>
 	<string.h>
 	<stdlib.h>
+	<ctype.h>
 
