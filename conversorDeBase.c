@@ -405,20 +405,20 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
 
 int main ()
 {
-    //unsigned int continuar = 1;
-    //while (continuar != 0)
-    //{
+    unsigned int continuar = 1;
+    while (continuar != 0)
+    {
         system("cls");
-        char *res = malloc(1);
-        char valor [1000];
-        char valorClone [1000];
+        char *res = malloc (4);
+        char valor [100];
+        char valorClone [100];
         unsigned int baseValor, baseConversao;
         printf ("Conversor de bases numericas\n");
 
         printf ("\nDigite o valor a ser convertido:\n");
         fflush(stdout);
 
-        scanf("%s", valor);
+        scanf("%s", &valor);
         fflush(stdin);
         strcpy(valorClone, valor);
 
@@ -438,7 +438,7 @@ int main ()
 
         printf("\nR: %s (base %i) ~= %s (base %i)\n", valorClone, baseValor, result, baseConversao);
 
-        /*resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
+        resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
         fflush(stdout);
         scanf ("%s", res);
         fflush (stdin);
@@ -455,7 +455,7 @@ int main ()
 
         free(res);
         free(result);
-    }*/
+    }
 
     return 0;
 }
