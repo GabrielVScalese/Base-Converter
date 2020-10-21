@@ -405,7 +405,7 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
 
 int main ()
 {
-    unsigned int continuar = 1;
+    //unsigned int continuar = 1;
     //while (continuar != 0)
     //{
         system("cls");
