@@ -293,9 +293,8 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 {
     unsigned int quociente = (unsigned int) valor; // Obtem a parte inteira do valor
     double parteDecimal = valor - quociente;
-    int aux = 0;
+    unsigned int aux = 0;
     unsigned int numeroCasas = 0;
-    char *auxChar = malloc (4);
 
     struct list *listaResto = malloc(4);
     inicializarLista(listaResto);
@@ -307,7 +306,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 
     while (quociente != 0)
     {
-        int resto = quociente % baseConversao;
+        unsigned int resto = quociente % baseConversao;
         char *restoChar = malloc (4);
        
         if (resto > 9)
