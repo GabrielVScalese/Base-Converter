@@ -5,7 +5,7 @@
 #include <ctype.h>
 
 struct no {
-    int valor;
+    char *valor;
     struct no *prox;
 };
 
@@ -22,7 +22,7 @@ void inicializarLista (struct lista *lista)
     lista->fim = NULL;
 }
 
-void inserirNoInicio (struct lista *lista, int valor)
+void inserirNoInicio (struct lista *lista, char* valor)
 {
     struct no *novoNo = malloc(4);
     novoNo->valor = valor;
@@ -66,18 +66,16 @@ char* getCharArray (struct lista *lista)
     char *charArray = malloc (lista->tamanho * sizeof(char));
     struct no *aux = lista->primeiro;
     int cont = 0;
-    char *valorChar = malloc (4);
     strcpy(charArray, "");
 
     while (aux != NULL)
     {
-        sprintf(valorChar, "%i", aux->valor);
-        strcat(charArray, valorChar);
+        char *auxChar = aux->valor;
+        strcat(charArray, aux->valor);
         aux = aux->prox;
         cont++;
     }
 
-    free (valorChar);
     return charArray;
 }
 
@@ -295,8 +293,9 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 {
     unsigned int quociente = (unsigned int) valor; // Obtem a parte inteira do valor
     double parteDecimal = valor - quociente;
-    unsigned int aux = 0;
+    int aux = 0;
     unsigned int numeroCasas = 0;
+    char *auxChar = malloc (4);
 
     struct list *listaResto = malloc(4);
     inicializarLista(listaResto);
@@ -304,12 +303,19 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     inicializarLista(listaDecimal);
 
     if (quociente == 0)
-        inserirNoInicio(listaResto, 0);
+        inserirNoInicio(listaResto, "0");
 
     while (quociente != 0)
     {
         int resto = quociente % baseConversao;
-        inserirNoInicio(listaResto, resto);
+        char *restoChar = malloc (4);
+       
+        if (resto > 9)
+            *restoChar = getLetra (resto);
+        else
+            sprintf(restoChar, "%i", resto);
+        
+        inserirNoInicio(listaResto, restoChar);
         quociente = (int) quociente / baseConversao;
     }
 
@@ -318,9 +324,16 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
         {
             double produto;
             produto = parteDecimal * baseConversao;
-            aux = parteDecimal * baseConversao;
+            aux = produto;
             parteDecimal = produto;
-            inserirNoFim(listaDecimal, aux);
+            char *auxChar = malloc (4);
+            
+            if (aux > 9)
+                *auxChar = getLetra (aux);
+            else
+                sprintf(auxChar, "%i", aux);
+            
+            inserirNoFim(listaDecimal, auxChar);
 
             if (isInteger(parteDecimal))
                 break;
@@ -331,7 +344,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
             numeroCasas++;
         }
     else
-        inserirNoFim(listaDecimal, 0);
+        inserirNoFim(listaDecimal, "0");
 
     char *parteInteiraChar = getCharArray(listaResto);
     char *parteDecimalChar = getCharArray(listaDecimal);
@@ -459,3 +472,4 @@ int main ()
 
     return 0;
 }
+
