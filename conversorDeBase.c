@@ -12,7 +12,7 @@ struct no {
 struct lista {
     struct no *primeiro;
     struct no *fim;
-    int tamanho;
+    unsigned int tamanho;
 };
 
 void inicializarLista (struct lista *lista)
@@ -41,7 +41,7 @@ void inserirNoInicio (struct lista *lista, char* valor)
     }
 }
 
-void inserirNoFim (struct lista *lista, int valor)
+void inserirNoFim (struct lista *lista, char* valor)
 {
     struct no *novoNo = malloc(4);
     novoNo->valor = valor;
@@ -65,7 +65,7 @@ char* getCharArray (struct lista *lista)
 {
     char *charArray = malloc (lista->tamanho * sizeof(char));
     struct no *aux = lista->primeiro;
-    int cont = 0;
+    unsigned int cont = 0;
     strcpy(charArray, "");
 
     while (aux != NULL)
@@ -81,7 +81,7 @@ char* getCharArray (struct lista *lista)
 
 void removaChar (char *string, char carac)
 {
-    int i = 0, j = 0;
+    unsigned int i = 0, j = 0;
 
     while (string[i])
     {
@@ -96,184 +96,41 @@ void removaChar (char *string, char carac)
 
 char* getLetra (int valor)
 {
-    if (valor == 10)
-        return 'A';
-
-    if (valor == 11)
-        return 'B';
-
-    if (valor == 12)
-        return 'C';
-
-    if (valor == 13)
-        return 'D';
-
-    if (valor == 14)
-        return 'E';
-
-    if (valor == 15)
-        return 'F';
-
-    if (valor == 16)
-        return 'G';
-
-    if (valor == 17)
-        return 'H';
-
-    if (valor == 18)
-        return 'I';
-
-    if (valor == 19)
-        return 'J';
-
-    if (valor == 20)
-        return 'K';
-
-    if (valor == 21)
-        return 'L';
-
-    if (valor == 22)
-        return 'M';
-
-    if (valor == 23)
-        return 'N';
-
-    if (valor == 24)
-        return 'O';
-
-    if (valor == 25)
-        return 'P';
-
-    if (valor == 26)
-        return 'Q';
-
-    if (valor == 27)
-        return 'R';
-
-    if (valor == 28)
-        return 'S';
-
-    if (valor == 29)
-        return 'T';
-
-    if (valor == 30)
-        return 'U';
-
-    if (valor == 31)
-        return 'V';
-
-    if (valor == 32)
-        return 'W';
-
-    if (valor == 33)
-        return 'X';
-
-    if (valor == 34)
-        return 'Y';
-
-    if (valor == 35)
-        return 'Z';
+    char *alfabeto = malloc (26 * sizeof(char));
+    strcpy(alfabeto, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    
+    return alfabeto[valor - 10];
 }
 
-int getValor (char *letra)
+unsigned int getValor (char *letra)
 {
-    if (toupper(letra) == 'A')
-        return 10;
-
-    if (toupper(letra) == 'B')
-        return 11;
-
-    if (toupper(letra) == 'C')
-        return 12;
-
-    if (toupper(letra) == 'D')
-        return 13;
-
-    if (toupper(letra) == 'E')
-        return 14;
-
-    if (toupper(letra) == 'F')
-        return 15;
-
-    if (toupper(letra) == 'G')
-        return 16;
-
-    if (toupper(letra) == 'H')
-        return 17;
-
-    if (toupper(letra) == 'I')
-        return 18;
-
-    if (toupper(letra) == 'J')
-        return 19;
-
-    if (toupper(letra) == 'K')
-        return 20;
-
-    if (toupper(letra) == 'L')
-        return 21;
-
-    if (toupper(letra) == 'M')
-        return 22;
-
-    if (toupper(letra) == 'N')
-        return 23;
-
-    if (toupper(letra) == 'O')
-        return 24;
-
-    if (toupper(letra) == 'P')
-        return 25;
-
-    if (toupper(letra) == 'Q')
-        return 26;
-
-    if (toupper(letra) == 'R')
-        return 27;
-
-    if (toupper(letra) == 'S')
-        return 28;
-
-    if (toupper(letra) == 'T')
-        return 29;
-
-    if (toupper(letra) == 'U')
-        return 30;
-
-    if (toupper(letra) == 'V')
-        return 31;
-
-    if (toupper(letra) == 'W')
-        return 32;
-
-    if (toupper(letra) == 'X')
-        return 33;
-
-    if (toupper(letra) == 'Y')
-        return 34;
-
-    if (toupper(letra) == 'Z')
-        return 35;
+   char *alfabeto = malloc (26 * sizeof(char));
+   strcpy(alfabeto, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+   
+   unsigned int i = 0;
+   for (; i < 26; i++)
+        if (alfabeto[i] == toupper(letra))
+            return i + 10;
 }
 
 double converterParaDez (char valor [], unsigned int baseValor)
 {
     double result = 0;
     int i = strlen(valor) - 1;
-    int cont = 0;
+    unsigned int cont = 0;
 
     for (; i >= 0 ; i--)
     {
         if (isalpha(valor[i]))
         {
-            int digito = getValor(valor[i]);
+            unsigned int digito = getValor(valor[i]);
             double potencia = pow (baseValor, cont);
             result += digito * potencia;
             cont++;
         }
         else
         {
-            int digito = valor[i] - '0';
+            unsigned int digito = valor[i] - '0';
             double potencia = pow (baseValor, cont);
             result += digito * potencia;
             cont++;
@@ -283,10 +140,10 @@ double converterParaDez (char valor [], unsigned int baseValor)
     return result;
 }
 
-int isInteger(double val)
+int isInteger (double valor)
 {
-    int truncated = (int)val;
-    return (val == truncated);
+    int valorInteiro = (int) valor;
+    return (valor == valorInteiro);
 }
 
 char* converterParaBaseFrac (double valor, unsigned int baseConversao)
@@ -321,8 +178,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     if (parteDecimal != 0)
         while (numeroCasas < 11)
         {
-            double produto;
-            produto = parteDecimal * baseConversao;
+            double produto = parteDecimal * baseConversao;
             aux = produto;
             parteDecimal = produto;
             char *auxChar = malloc (4);
@@ -358,30 +214,26 @@ double converterParaDezFrac (char valor[], unsigned int baseValor)
 {
     char delim [] = ",";
     char *split = strtok(valor, delim); // Obtem parte inteira do valor
-    char aux [10];
-    strcpy(aux, split);
-    double parteInteira = converterParaDez(aux, baseValor);
+    double parteInteira = converterParaDez(split, baseValor);
 
     split = strtok(NULL, delim); // Obtem parte decimal do valor
 
     double parteFrac = 0;
-    char numerosDecimais [100];
-    strcpy(numerosDecimais, split);
-    int i = 0;
+    unsigned int i = 0;
     int cont = -1;
 
-    for (; i <= strlen(numerosDecimais) - 1; i++)
+    for (; i <= strlen(split) - 1; i++)
     {
-        if (isalpha(numerosDecimais[i]))
+        if (isalpha(split[i]))
         {
-            int digito = getValor (numerosDecimais[i]);
+            unsigned int digito = getValor (split[i]);
             double potencia = pow (baseValor, cont);
             parteFrac += digito * potencia;
             cont--;
         }
         else
         {
-            int digito = numerosDecimais[i] - '0';
+            unsigned int digito = split[i] - '0';
             double potencia = pow (baseValor, cont);
             parteFrac += digito * potencia;
             cont--;
@@ -403,8 +255,8 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
         removaChar(valor, '-');
         strcpy(result, "-");
         double valorNaDez = converterParaDezFrac(valor, baseValor);
-        char *auxResult = converterParaBaseFrac (valorNaDez, baseConversao);
-        strcat(result, auxResult);
+        char *valorNaBase = converterParaBaseFrac (valorNaDez, baseConversao);
+        strcat(result, valorNaBase);
     }
     else
     {
@@ -471,4 +323,7 @@ int main ()
 
     return 0;
 }
+
+
+
 
