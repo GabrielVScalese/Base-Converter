@@ -76,6 +76,7 @@ char* getCharArray (struct lista *lista)
         cont++;
     }
 
+    free(lista);
     return charArray;
 }
 
@@ -96,16 +97,14 @@ void removaChar (char *string, char carac)
 
 char* getLetra (int valor)
 {
-    char *alfabeto = malloc (26 * sizeof(char));
-    strcpy(alfabeto, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
     return alfabeto[valor - 10];
 }
 
 unsigned int getValor (char *letra)
 {
-   char *alfabeto = malloc (26 * sizeof(char));
-   strcpy(alfabeto, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+   char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
    
    unsigned int i = 0;
    for (; i < 26; i++)
@@ -323,7 +322,3 @@ int main ()
 
     return 0;
 }
-
-
-
-
