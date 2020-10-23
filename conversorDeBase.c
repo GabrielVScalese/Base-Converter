@@ -152,9 +152,9 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     unsigned int aux = 0;
     unsigned int numeroCasas = 0;
 
-    struct list *listaResto = malloc(4);
+    struct lista *listaResto = malloc(4);
     inicializarLista(listaResto);
-    struct list *listaDecimal = malloc(4);
+    struct lista *listaDecimal = malloc(4);
     inicializarLista(listaDecimal);
 
     if (quociente == 0)
@@ -322,4 +322,3 @@ int main ()
 
     return 0;
 }
-
