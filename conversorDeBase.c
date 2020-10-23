@@ -266,12 +266,30 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
     return result;
 }
 
+int existsBase (unsigned int base)
+{
+    return base >= 2 && base <= 36;
+}
+
+int existsNaBase (char valor[], unsigned int baseValor)
+{
+    unsigned int i = 0;
+    for (; i <= strlen(valor) - 1; i++)
+    {
+        int aux = valor[i] - '0';
+        if (aux >= baseValor)
+            return 0;
+    }
+
+    return 1;
+}
+
 int main ()
 {
     unsigned int continuar = 1;
     while (continuar != 0)
     {
-        system("cls");
+        system("clear");
         char *res = malloc (4);
         char valor [100];
         char valorClone [100];
@@ -285,21 +303,42 @@ int main ()
         fflush(stdin);
         strcpy(valorClone, valor);
 
-        printf ("\nDigite a base do valor a ser convertido:\n");
+        base_valor: printf ("\nDigite a base do valor a ser convertido:\n");
         fflush(stdout);
 
         scanf("%u", &baseValor);
         fflush(stdin);
 
-        printf ("\nDigite a base para a conversao:\n");
+        if (existsBase(baseValor) == 0)
+        {
+            printf ("\nBase numérica inexistente!\n");
+            fflush(stdout);
+            goto base_valor;
+        }
+
+        if (existsNaBase(valor, baseValor) == 0)
+        {
+            printf ("\nValor não existente na base fornecida!\n");
+            fflush(stdout);
+            goto base_valor;
+        }
+
+        base_conversao: printf ("\nDigite a base para a conversao:\n");
         fflush(stdout);
 
         scanf("%u", &baseConversao);
         fflush(stdin);
 
+        if (existsBase(baseConversao) == 0)
+        {
+            printf ("\nBase numérica inexistente!\n");
+            fflush(stdout);
+            goto base_conversao;
+        }
+
         char* result = converter(valor, baseValor, baseConversao, result);
 
-        printf("\nR: %s (base %u) ~= %s (base %u)\n", valorClone, baseValor, result, baseConversao);
+        printf("\nR: %s (base %u) = %s (base %u)\n", valorClone, baseValor, result, baseConversao);
 
         resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
         fflush(stdout);
