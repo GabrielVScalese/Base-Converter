@@ -102,7 +102,7 @@ char* getLetra (int valor)
     return alfabeto[valor - 10];
 }
 
-unsigned int getValor (char *letra)
+unsigned int getValor (char letra)
 {
    char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
    
@@ -322,3 +322,4 @@ int main ()
 
     return 0;
 }
+
