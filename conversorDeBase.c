@@ -95,7 +95,7 @@ void removaChar (char *string, char carac)
     string[j] = '\0';
 }
 
-char* getLetra (int valor)
+char getLetra (int valor)
 {
     char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
@@ -168,7 +168,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
         if (resto > 9)
             *restoChar = getLetra (resto);
         else
-            sprintf(restoChar, "%i", resto);
+            sprintf(restoChar, "%u", resto);
         
         inserirNoInicio(listaResto, restoChar);
         quociente = (int) quociente / baseConversao;
@@ -185,7 +185,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
             if (aux > 9)
                 *auxChar = getLetra (aux);
             else
-                sprintf(auxChar, "%i", aux);
+                sprintf(auxChar, "%u", aux);
             
             inserirNoFim(listaDecimal, auxChar);
 
@@ -299,7 +299,7 @@ int main ()
 
         char* result = converter(valor, baseValor, baseConversao, result);
 
-        printf("\nR: %s (base %i) ~= %s (base %i)\n", valorClone, baseValor, result, baseConversao);
+        printf("\nR: %s (base %u) ~= %s (base %u)\n", valorClone, baseValor, result, baseConversao);
 
         resposta: printf("\n\nDeseja encerrar o programa? (sim / nao) ");
         fflush(stdout);
