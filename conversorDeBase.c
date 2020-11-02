@@ -68,11 +68,10 @@ char* getCharArray (struct lista *lista)
     unsigned int cont = 0;
     strcpy(charArray, "");
 
-    while (aux != NULL)
+    for (; aux != NULL; aux = aux->prox)
     {
         char *auxChar = aux->valor;
         strcat(charArray, aux->valor);
-        aux = aux->prox;
         cont++;
     }
 
@@ -112,9 +111,9 @@ unsigned int getValor (char letra)
             return i + 10;
 }
 
-double converterParaDez (char valor [], unsigned int baseValor)
+long double converterParaDez (char valor [], unsigned int baseValor)
 {
-    double result = 0;
+    long double result = 0;
     int i = strlen(valor) - 1;
     unsigned int cont = 0;
 
@@ -123,14 +122,14 @@ double converterParaDez (char valor [], unsigned int baseValor)
         if (isalpha(valor[i]))
         {
             unsigned int digito = getValor(valor[i]);
-            double potencia = pow (baseValor, cont);
+            long double potencia = pow (baseValor, cont);
             result += digito * potencia;
             cont++;
         }
         else
         {
             unsigned int digito = valor[i] - '0';
-            double potencia = pow (baseValor, cont);
+            long double potencia = pow (baseValor, cont);
             result += digito * potencia;
             cont++;
         }
@@ -139,7 +138,7 @@ double converterParaDez (char valor [], unsigned int baseValor)
     return result;
 }
 
-int isInteger (double valor)
+int isInteiro (double valor)
 {
     int valorInteiro = (int) valor;
     return (valor == valorInteiro);
@@ -147,7 +146,7 @@ int isInteger (double valor)
 
 char* converterParaBaseFrac (double valor, unsigned int baseConversao)
 {
-    unsigned int quociente = (unsigned int) valor; // Obtem a parte inteira do valor
+    unsigned int quociente = (unsigned int) valor;
     double parteDecimal = valor - quociente;
     unsigned int aux = 0;
     unsigned int numeroCasas = 0;
@@ -189,7 +188,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
             
             inserirNoFim(listaDecimal, auxChar);
 
-            if (isInteger(parteDecimal))
+            if (isInteiro(parteDecimal))
                 break;
 
             if (aux >= 1)
@@ -209,15 +208,15 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     return parteInteiraChar;
 }
 
-double converterParaDezFrac (char valor[], unsigned int baseValor)
+long double converterParaDezFrac (char valor[], unsigned int baseValor)
 {
     char delim [] = ",";
     char *split = strtok(valor, delim); // Obtem parte inteira do valor
-    double parteInteira = converterParaDez(split, baseValor);
+    long double parteInteira = converterParaDez(split, baseValor);
 
     split = strtok(NULL, delim); // Obtem parte decimal do valor
 
-    double parteFrac = 0;
+    long double parteFrac = 0;
     unsigned int i = 0;
     int cont = -1;
 
@@ -226,14 +225,14 @@ double converterParaDezFrac (char valor[], unsigned int baseValor)
         if (isalpha(split[i]))
         {
             unsigned int digito = getValor (split[i]);
-            double potencia = pow (baseValor, cont);
+            long double potencia = pow (baseValor, cont);
             parteFrac += digito * potencia;
             cont--;
         }
         else
         {
             unsigned int digito = split[i] - '0';
-            double potencia = pow (baseValor, cont);
+            long double potencia = pow (baseValor, cont);
             parteFrac += digito * potencia;
             cont--;
         }
@@ -253,13 +252,15 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
     {
         removaChar(valor, '-');
         strcpy(result, "-");
-        double valorNaDez = converterParaDezFrac(valor, baseValor);
+        long double valorNaDez = converterParaDezFrac(valor, baseValor);
         char *valorNaBase = converterParaBaseFrac (valorNaDez, baseConversao);
         strcat(result, valorNaBase);
     }
     else
     {
-        double valorNaDez = converterParaDezFrac(valor, baseValor);
+        long double valorNaDez = converterParaDezFrac(valor, baseValor);
+        printf("%lf", valorNaDez);
+        fflush(stdout);
         result = converterParaBaseFrac (valorNaDez, baseConversao);
     }
 
@@ -274,11 +275,21 @@ int existsBase (unsigned int base)
 int existsNaBase (char valor[], unsigned int baseValor)
 {
     unsigned int i = 0;
+    char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (; i <= strlen(valor) - 1; i++)
     {
-        int aux = valor[i] - '0';
-        if (aux >= baseValor)
-            return 0;
+        if (strchr(alfabeto, toupper(valor[i])))
+        {
+            unsigned int valorLetra = getValor(valor[i]);
+            if (baseValor < valorLetra + 1)
+                return 0;
+        }
+        else
+        {
+            int aux = valor[i] - '0';
+            if (aux >= baseValor)
+                return 0;
+        }
     }
 
     return 1;
