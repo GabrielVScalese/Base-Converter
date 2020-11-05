@@ -26,7 +26,8 @@ void inserirNoInicio (struct lista *lista, char* valor)
 {
     struct no *novoNo = malloc(sizeof(struct no*));
     novoNo->valor = valor;
-    if (lista->primeiro == NULL)
+    
+	if (lista->primeiro == NULL)
     {
         novoNo->prox = NULL;
         lista->primeiro = novoNo;
@@ -45,7 +46,8 @@ void inserirNoFim (struct lista *lista, char* valor)
 {
     struct no *novoNo = malloc(sizeof(struct no*));
     novoNo->valor = valor;
-    if (lista->primeiro == NULL)
+    
+	if (lista->primeiro == NULL)
     {
         novoNo->prox = NULL;
         lista->primeiro = novoNo;
@@ -68,7 +70,7 @@ char* getCharArray (struct lista *lista)
     unsigned int cont = 0;
     strcpy(charArray, "");
 
-    for (; aux != NULL; aux = aux->prox) // Tentar desalocar
+    for (; aux != NULL; aux = aux->prox) 
     {
         char *auxChar = aux->valor;
         strcat(charArray, aux->valor);
