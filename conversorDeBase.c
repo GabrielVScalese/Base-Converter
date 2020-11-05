@@ -259,7 +259,6 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
     else
     {
         long double valorNaDez = converterParaDezFrac(valor, baseValor);
-        printf("%lf", valorNaDez);
         fflush(stdout);
         result = converterParaBaseFrac (valorNaDez, baseConversao);
     }
@@ -278,6 +277,9 @@ int existsNaBase (char valor[], unsigned int baseValor)
     char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (; i <= strlen(valor) - 1; i++)
     {
+        if (valor[i] == ',')
+            continue;
+
         if (strchr(alfabeto, toupper(valor[i])))
         {
             unsigned int valorLetra = getValor(valor[i]);
