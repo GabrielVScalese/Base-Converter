@@ -24,7 +24,7 @@ void inicializarLista (struct lista *lista)
 
 void inserirNoInicio (struct lista *lista, char* valor)
 {
-    struct no *novoNo = malloc(4);
+    struct no *novoNo = malloc(sizeof(struct no*));
     novoNo->valor = valor;
     if (lista->primeiro == NULL)
     {
@@ -43,7 +43,7 @@ void inserirNoInicio (struct lista *lista, char* valor)
 
 void inserirNoFim (struct lista *lista, char* valor)
 {
-    struct no *novoNo = malloc(4);
+    struct no *novoNo = malloc(sizeof(struct no*));
     novoNo->valor = valor;
     if (lista->primeiro == NULL)
     {
@@ -68,7 +68,7 @@ char* getCharArray (struct lista *lista)
     unsigned int cont = 0;
     strcpy(charArray, "");
 
-    for (; aux != NULL; aux = aux->prox)
+    for (; aux != NULL; aux = aux->prox) // Tentar desalocar
     {
         char *auxChar = aux->valor;
         strcat(charArray, aux->valor);
@@ -151,9 +151,9 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     unsigned int aux = 0;
     unsigned int numeroCasas = 0;
 
-    struct lista *listaResto = malloc(4);
+    struct lista *listaResto = malloc(sizeof(struct lista*));
     inicializarLista(listaResto);
-    struct lista *listaDecimal = malloc(4);
+    struct lista *listaDecimal = malloc(sizeof(struct lista*));
     inicializarLista(listaDecimal);
 
     if (quociente == 0)
@@ -162,7 +162,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
     while (quociente != 0)
     {
         unsigned int resto = quociente % baseConversao;
-        char *restoChar = malloc (4);
+        char *restoChar = malloc (sizeof(char));
        
         if (resto > 9)
             *restoChar = getLetra (resto);
@@ -179,7 +179,7 @@ char* converterParaBaseFrac (double valor, unsigned int baseConversao)
             double produto = parteDecimal * baseConversao;
             aux = produto;
             parteDecimal = produto;
-            char *auxChar = malloc (4);
+            char *auxChar = malloc (sizeof(char));
             
             if (aux > 9)
                 *auxChar = getLetra (aux);
@@ -243,7 +243,7 @@ long double converterParaDezFrac (char valor[], unsigned int baseValor)
 
 char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao, char *result)
 {
-    result = malloc (4);
+    result = malloc (10 * sizeof(char));
 
     if (strchr(valor, ',') == NULL)
         strcat(valor, ",0");
@@ -255,11 +255,11 @@ char* converter (char *valor, unsigned int baseValor, unsigned int baseConversao
         long double valorNaDez = converterParaDezFrac(valor, baseValor);
         char *valorNaBase = converterParaBaseFrac (valorNaDez, baseConversao);
         strcat(result, valorNaBase);
+        free(valorNaBase);
     }
     else
     {
         long double valorNaDez = converterParaDezFrac(valor, baseValor);
-        fflush(stdout);
         result = converterParaBaseFrac (valorNaDez, baseConversao);
     }
 
@@ -277,7 +277,7 @@ int existsNaBase (char valor[], unsigned int baseValor)
     char alfabeto [26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (; i <= strlen(valor) - 1; i++)
     {
-        if (valor[i] == ',')
+        if (valor[i] == ',' || valor[i] == '-')
             continue;
 
         if (strchr(alfabeto, toupper(valor[i])))
